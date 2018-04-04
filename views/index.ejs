@@ -5,16 +5,23 @@
 		<div class="row">
 			<div class="col">
 				<div class="card bg-light mb-3" >
-					<div class="card-header"><h4>Network</h4></div>
+					<div class="card-header"><h4>Financial</h4></div>
 					<div class="card-body">
-						Price: $<%= btcPrice %> (cryptowatch)</br>
-						Price: $<%= cm_price %> (coinmarketcap)</br>
+						Price: $<%= btcPrice %> </br>
 						Finney: $<%= finPrice.toFixed(2) %></br>
-						200dma: $<%= dmaTwoHundred %></br>
-						Block height: <%= height %></br>
-						Active Nodes: <%= nodes %></br>
+						200dma: $<%= dmaTwoHundred.toFixed(2) %></br>
+						Mayer Multiple: <%= Math.round(btcPrice/dmaTwoHundred*100)/100 %>x</br>
 						24 hour volume: $<%= vol24 %></br>
 						Market Cap: $<%= marketCap %></br>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card bg-secondary mb-3" >
+					<div class="card-header"><h4>Network</h4></div>
+					<div class="card-body">
+						Block height: <%= height %></br>
+						Active Nodes: <%= nodes %></br>
 					</div>
 				</div>
 			</div>

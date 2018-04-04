@@ -40,22 +40,21 @@ request({
 	json: true
 },
 	function(error, response, body) {
-		//results = body.result;
-		days = body.result['86400'];
+		results = body.result;
+		days = results['86400'];
 		today = days[days.length-1];
 		todayClose = today[4];
-		console.log(todayClose);
-
+		
 		var sum = 0;
 		
 		for(var i=1; i<201; i++) {
-			aDay = days.length-i;
+			aDay = days[days.length-i];
 			close = aDay[4];
 			sum = sum + close;
 			
 		};
-		
 		dmaTwoHundred = sum/200;
+		console.log(dmaTwoHundred);
 	})
 
 //CoinmarketCap request
@@ -67,7 +66,6 @@ request({
 		cmc_data = body;
 		cmc_last = cmc_data[0];
 		vol24 = simplify(cmc_last['24h_volume_usd']);
-		console.log(vol24);
 		marketCap = simplify(cmc_last.market_cap_usd);
 		cm_price = cmc_last.price_usd;
 });
@@ -97,6 +95,7 @@ request({
 		
 });
 
+
 //index render
 app.get('/', function(req, res) {
 	res.render("index", {
@@ -115,7 +114,7 @@ app.get('/', function(req, res) {
 });
 
 //converter render
-app.get('/converter', function(re, res) {
+app.get('/converter', function(req, res) {
 	res.render("converter", {
 		btcPrice: btcPrice,
 		finPrice: finPrice
@@ -123,7 +122,7 @@ app.get('/converter', function(re, res) {
 });
 
 //sources render
-app.get('/sources', function(re, res) {
+app.get('/sources', function(req, res) {
 	res.render("sources", {
 		btcPrice: btcPrice,
 		finPrice: finPrice
