@@ -24,6 +24,20 @@ function simplify (labelValue) {
 
     : Math.abs(Number(labelValue));
 }
+
+
+//make current date human readable
+var today = new Date();
+var daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var months = ['January', 'February','March','April','May','June','July','August','September','October','November','December'];
+                  
+var thisDay = daysOfWeek[today.getDay()];
+var thisMonth = months[today.getMonth()];
+var thisDate = today.getDate();
+var thisYear = today.getFullYear();
+var thisFullDate = thisDay + ', ' + thisMonth + ' ' + thisDate + ', ' + thisYear;
+
+
 //Cryptowatch price request
 request({
 	url: "https://api.cryptowat.ch/markets/bitstamp/btcusd/price",
@@ -42,9 +56,7 @@ request({
 	function(error, response, body) {
 		results = body.result;
 		days = results['86400'];
-		today = days[days.length-1];
-		todayClose = today[4];
-		
+				
 		var sum = 0;
 		
 		for(var i=1; i<201; i++) {
@@ -55,7 +67,7 @@ request({
 		};
 		dmaTwoHundred = sum/200;
 		console.log(dmaTwoHundred);
-	})
+	});
 
 //CoinmarketCap request
 request({
@@ -96,6 +108,8 @@ request({
 });
 
 
+
+
 //index render
 app.get('/', function(req, res) {
 	res.render("index", {
@@ -108,8 +122,30 @@ app.get('/', function(req, res) {
 		marketCap: marketCap,
 		nodes: nodes,
 		cm_price: cm_price,
-		dmaTwoHundred: dmaTwoHundred
+		dmaTwoHundred: dmaTwoHundred,
+		today: today
 
+	});
+});
+
+//transcript render
+app.get('/transcript', function(req, res) {
+	res.render("transcript", {
+		btcPrice: btcPrice,
+		finPrice: finPrice,
+		lnNodes: lnNodes,
+		lnChannels: lnChannels,
+		height: height,
+		vol24: vol24,
+		marketCap: marketCap,
+		nodes: nodes,
+		cm_price: cm_price,
+		dmaTwoHundred: dmaTwoHundred,
+		// thisYear: thisYear,
+		// thisDate: thisDate,
+		// thisDay: thisDay,
+		// thisMonth: thisMonth,
+		thisFullDate: thisFullDate
 	});
 });
 

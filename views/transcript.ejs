@@ -1,0 +1,16 @@
+<html>
+<% include header %>
+<div class="container">
+<p>You're listening to the Market Minute, a resource from Bottomshelf Bitcoin.</p>
+
+<p>Good morning bitcoiners, today is <%= thisFullDate %></p>
+
+<p>The price of bitcoin is <%= btcPrice %> U.S. dollars, putting the price of a Finney at <%= Math.round(finPrice*100) %> cents. The two hundred day moving average is <%= dmaTwoHundred.toFixed(2) %>, making the Mayer Multiple <%= Math.round(btcPrice/dmaTwoHundred*100)/100 %>x. Twenty-four hour volume was <%= vol24 %>illion dollars and the market cap is currently <%= marketCap %>illion dollars.</p>
+
+<p>On the main net, there are currently <%= nodes %> active nodes, <%= lnNodes %> publically reachable lightning nodes, and <%= lnChannels %> lightning channels.</p>
+
+<p>Average transaction fees were ___ Satoshis per byte over the last twenty-four hours, and ____ Satoshis per byte over the last seven days. Suggested transaction fees are ___ Satoshis per byte for the next block, ___ Satoshis per byte for the next hour, ____ Satoshis per byte for today, and ___ Satoshis per byte for this week.</p>
+
+<p>The next retarget is estimated to occur on ____, and will have a difficult ___ of ____ percent.</p>
+</div>
+</html>
