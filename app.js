@@ -30,13 +30,15 @@ function simplify (labelValue) {
 var today = new Date();
 var daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var months = ['January', 'February','March','April','May','June','July','August','September','October','November','December'];
-                  
 var thisDay = daysOfWeek[today.getDay()];
 var thisMonth = months[today.getMonth()];
 var thisDate = today.getDate();
 var thisYear = today.getFullYear();
 var thisFullDate = thisDay + ', ' + thisMonth + ' ' + thisDate + ', ' + thisYear;
 
+
+
+//Data Requests//
 
 //Cryptowatch price request
 request({
@@ -47,6 +49,20 @@ request({
 		btcPrice = body.result.price;
 		finPrice = body.result.price / 10000
 });
+
+//cryptowatch request w/ other syntax
+// function cryptowatch() {
+// 	fetch("https://api.cryptowat.ch/markets/bitstamp/btcusd/price").then(function(response) {
+// 	return response.json();
+// }).then(function(json) {
+// 	btcPrice = body.result.price;
+// 	finPrice = btcPrice/10000;
+// }).catch(function(err) {
+// 	console.log(err);
+// });
+// }
+
+// cryptowatch();
 
 //Cryptowatch ohlc request
 request({
@@ -66,7 +82,7 @@ request({
 			
 		};
 		dmaTwoHundred = sum/200;
-		console.log(dmaTwoHundred);
+		//console.log(dmaTwoHundred);
 	});
 
 //CoinmarketCap request
@@ -93,6 +109,17 @@ request({
 		nodes = last.total_nodes;		
 });
 
+//Bitcoin()com request
+request({
+	url: "https://charts.bitcoin.com/api/recent",
+	json: true
+},
+	function(error, response, body) {
+		data = body;
+		txFee24 = data[1]["fee-rate"];
+	}
+);
+
 //Shabang request
 request({
 	url: "https://shabang.io/stats.json",
@@ -107,7 +134,27 @@ request({
 		
 });
 
+//Bitcoin Github request
+request({
+	url: "https://api.github.com/repos/bitcoin/bitcoin/pulls?state=open?page=1&per_page=100",
+	json: true
+},
+	function(error, response, body) {
+		ghData = body;
+		ghfirst = ghData[0];
+		ghID = ghfirst.id;
+		//console.log(githubLast);
+		//githubURL = githubLast.url;
+		console.log(ghfirst);
+		console.log(ghID);
+		
+});
 
+
+
+
+
+//Render Pages//
 
 
 //index render
@@ -123,8 +170,8 @@ app.get('/', function(req, res) {
 		nodes: nodes,
 		cm_price: cm_price,
 		dmaTwoHundred: dmaTwoHundred,
-		today: today
-
+		today: today,
+		txFee24: txFee24
 	});
 });
 
@@ -145,7 +192,8 @@ app.get('/transcript', function(req, res) {
 		// thisDate: thisDate,
 		// thisDay: thisDay,
 		// thisMonth: thisMonth,
-		thisFullDate: thisFullDate
+		thisFullDate: thisFullDate,
+		txFee24: txFee24
 	});
 });
 
