@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const request = require('request');
 const bodyparser = require('body-parser');
+const moment = require('moment');
 
 app.use(bodyparser.urlencoded({
 	extended: true
@@ -27,45 +28,25 @@ function simplify (labelValue) {
 
 
 //make current date human readable
-var today = new Date();
-var daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-var months = ['January', 'February','March','April','May','June','July','August','September','October','November','December'];
-var thisDay = daysOfWeek[today.getDay()];
-var thisMonth = months[today.getMonth()];
-var thisDate = today.getDate();
-var thisYear = today.getFullYear();
-var thisFullDate = thisDay + ', ' + thisMonth + ' ' + thisDate + ', ' + thisYear;
+var now = moment();
+var nowHuman = moment(now).format("dddd, MMMM Do YYYY");
 
 
 
 //Data Requests//
 
 //Cryptowatch price request
-request({
+function cryptowatch() {
+	request({
 	url: "https://api.cryptowat.ch/markets/bitstamp/btcusd/price",
 	json: true
 },
 	function(error, response, body) {
 		btcPrice = body.result.price;
-		finPrice = body.result.price / 10000
+		finPrice = body.result.price / 10000;
+		console.log("Current price: $" + btcPrice);
 });
-
-//cryptowatch request w/ other syntax
-// function cryptowatch() {
-// 	fetch("https://api.cryptowat.ch/markets/bitstamp/btcusd/price").then(function(response) {
-// 	return response.json();
-// }).then(function(json) {
-// 	btcPrice = body.result.price;
-// 	finPrice = btcPrice/10000;
-// }).catch(function(err) {
-// 	console.log(err);
-// });
-// }
-
-// cryptowatch();
-
-//Cryptowatch ohlc request
-request({
+	request({
 	url: "https://api.cryptowat.ch/markets/bitstamp/btcusd/ohlc",
 	json: true
 },
@@ -84,6 +65,13 @@ request({
 		dmaTwoHundred = sum/200;
 		//console.log(dmaTwoHundred);
 	});
+};
+
+cryptowatch();
+var cryptowat_ch = setInterval(cryptowatch, 300000);
+
+//Cryptowatch ohlc request
+
 
 //CoinmarketCap request
 request({
@@ -134,24 +122,39 @@ request({
 		
 });
 
-//Bitcoin Github request
+//Bitcoin Github new pull request
 request({
-	url: "https://api.github.com/repos/bitcoin/bitcoin/pulls?state=open?page=1&per_page=100",
-	json: true
+	url: "https://api.github.com/repos/bitcoin/bitcoin/pulls?state=open?sort=created?page=1&per_page=100",
+	json: true,
+	headers: {
+		'User-Agent': 'https://github.com/handymanJH'
+	}
 },
 	function(error, response, body) {
 		ghData = body;
 		ghfirst = ghData[0];
-		ghID = ghfirst.id;
+		created = ghfirst.created_at;
 		//console.log(githubLast);
 		//githubURL = githubLast.url;
-		console.log(ghfirst);
-		console.log(ghID);
-		
+		console.log("most recent issue created at " + created);
 });
 
-
-
+//Bitcoin Github closed request
+request({
+	url: "https://api.github.com/repos/bitcoin/bitcoin/pulls?state=closed?sort=updated?page=1&per_page=100",
+	json: true,
+	headers: {
+		'User-Agent': 'https://github.com/handymanJH'
+	}
+},
+	function(error, response, body) {
+		ghData = body;
+		ghfirst = ghData[0];
+		closed = ghfirst.closed_at;
+		//console.log(githubLast);
+		//githubURL = githubLast.url;
+		console.log("most recent issued closed at " + closed);
+});
 
 
 //Render Pages//
@@ -170,8 +173,8 @@ app.get('/', function(req, res) {
 		nodes: nodes,
 		cm_price: cm_price,
 		dmaTwoHundred: dmaTwoHundred,
-		today: today,
-		txFee24: txFee24
+		txFee24: txFee24,
+		nowHuman:nowHuman
 	});
 });
 
@@ -188,11 +191,7 @@ app.get('/transcript', function(req, res) {
 		nodes: nodes,
 		cm_price: cm_price,
 		dmaTwoHundred: dmaTwoHundred,
-		// thisYear: thisYear,
-		// thisDate: thisDate,
-		// thisDay: thisDay,
-		// thisMonth: thisMonth,
-		thisFullDate: thisFullDate,
+		nowHuman:nowHuman,
 		txFee24: txFee24
 	});
 });
