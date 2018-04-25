@@ -27,7 +27,17 @@ const data = {btcPrice:null,
  ghData:null,
  ghFirst:null,
  created:null,
- closed }
+ closed:null,
+ mayerMultiple:null}
+
+ var transcript = null;
+
+var now = moment();
+var nowHuman = moment(now).format("dddd, MMMM Do YYYY");
+
+
+
+//async test
 
 
 //Cryptowatch request
@@ -37,8 +47,8 @@ function cryptowatch() {
 	json: true
 },
 	function(error, response, body) {
-		data.btcPrice = body.result.price;
-		data.finPrice = body.result.price / 10000;
+		data.btcPrice = accounting.formatMoney(body.result.price);
+		data.finPrice = accounting.formatMoney(body.result.price / 10000);
 		console.log("Current price: $" + btcPrice);
 });
 	request({
@@ -57,7 +67,7 @@ function cryptowatch() {
 			sum = sum + close;
 			
 		};
-		data.dmaTwoHundred = sum/200;
+		data.dmaTwoHundred = accounting.formatMoney(sum/200);
 		//console.log(dmaTwoHundred);
 	});
 };
@@ -71,9 +81,9 @@ function coinMarketCap() {
 		function(error, response, body) {
 			cmc_data = body;
 			data.cmc_last = cmc_data[0];
-			data.vol24 = simplify(cmc_last['24h_volume_usd']);
-			data.marketCap = simplify(cmc_last.market_cap_usd);
-			data.cm_price = cmc_last.price_usd;
+			data.vol24 = accounting.formatMoney(data.cmc_last['24h_volume_usd']);
+			data.marketCap = accounting.formatMoney(data.cmc_last.market_cap_usd);
+			data.cm_price = data.cmc_last.price_usd;
 	});
 };
 
@@ -158,5 +168,11 @@ function corePulseClosed() {
 }
 
 function assembleText() {
-
+	transcript = `You're listening to the Market Minute, a resource from Bottomshelf Bitcoin. \
+	Good morning bitcoiners, today is ` +  nowHuman + `The price of bitcoin is ` + data.btcPrice +
+	`U.S. dollars, putting the price of a Finney at ` + data.finPrice + `. \ 
+	The two hundred day moving average is ` + data.dmaTwoHundred + `, making the Mayer Multiple ` + data.mayerMultiple + `x. \
+	Twenty-four hour volume was ` + data.vol24 + `and the market cap is currently ` + data.marketCap `. \
+	On the main net, there are currently ` + data.nodes +` active nodes, ` + data.lnNodes + `publically reachable lightning nodes, and ` + data.lnChannels + `lightning channels. \
+	Average transaction fees were ` + data.txFee24 + `Satoshis per byte over the last twenty-four hours.`;
 }

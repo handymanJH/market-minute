@@ -15,36 +15,33 @@ app.set("view engine", "ejs");
 
 
 //function to simplify large numbers
-function simplify (labelValue) {
-	// Nine Zeroes for Billions
-    return Math.abs(Number(labelValue)) >= 1.0e+9
-    ? Math.round(Math.abs(Number(labelValue)) / 1.0e+9) + "B"
-    // Six Zeroes for Millions 
-    : Math.abs(Number(labelValue)) >= 1.0e+6
-    ? Math.abs(Number(labelValue)) / 1.0e+6 + "M"
-    // Three Zeroes for Thousands
-    : Math.abs(Number(labelValue)) >= 1.0e+3
-    ? Math.abs(Number(labelValue)) / 1.0e+3 + "K"
+// function simplify (labelValue) {
+// 	// Nine Zeroes for Billions
+//     return Math.abs(Number(labelValue)) >= 1.0e+9
+//     ? Math.round(Math.abs(Number(labelValue)) / 1.0e+9) + "B"
+//     // Six Zeroes for Millions 
+//     : Math.abs(Number(labelValue)) >= 1.0e+6
+//     ? Math.abs(Number(labelValue)) / 1.0e+6 + "M"
+//     // Three Zeroes for Thousands
+//     : Math.abs(Number(labelValue)) >= 1.0e+3
+//     ? Math.abs(Number(labelValue)) / 1.0e+3 + "K"
 
-    : Math.abs(Number(labelValue));
-}
+//     : Math.abs(Number(labelValue));
+// }
 
 
 //make current date human readable
-var now = moment();
-var nowHuman = moment(now).format("dddd, MMMM Do YYYY");
 
 
 
 //Data Requests//
-cryptowatch();
 coinMarketCap();
 bitnodes();
 bci();
 shabang();
 corePulseNew();
 corePulseClosed();
-
+cryptowatch();
 
 function getData() {
 	cryptowatch();
@@ -85,34 +82,34 @@ app.get('/', function(req, res) {
 //transcript render
 app.get('/transcript', function(req, res) {
 	res.render("transcript", {
-		btcPrice: btcPrice,
-		finPrice: finPrice,
-		lnNodes: lnNodes,
-		lnChannels: lnChannels,
-		height: height,
-		vol24: vol24,
-		marketCap: marketCap,
-		nodes: nodes,
-		cm_price: cm_price,
-		dmaTwoHundred: dmaTwoHundred,
-		nowHuman:nowHuman,
-		txFee24: txFee24
+		btcPrice,
+		finPrice,
+		lnNodes,
+		lnChannels,
+		height,
+		vol24,
+		marketCap,
+		nodes,
+		cm_price,
+		dmaTwoHundred,
+		nowHuman,
+		txFee24
 	});
 });
 
 //converter render
 app.get('/converter', function(req, res) {
 	res.render("converter", {
-		btcPrice: btcPrice,
-		finPrice: finPrice
+		btcPrice,
+		finPrice
 	});
 });
 
 //sources render
 app.get('/sources', function(req, res) {
 	res.render("sources", {
-		btcPrice: btcPrice,
-		finPrice: finPrice
+		btcPrice,
+		finPrice
 	});
 });
 
